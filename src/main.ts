@@ -2,7 +2,7 @@ import type { View } from 'obsidian'
 import { Plugin } from 'obsidian'
 import { customSetData, symSetDataOg, type DataEngine } from './grapher'
 
-export default class MoodSuggestorPlugin extends Plugin {
+export default class GraphChildColors extends Plugin {
 	async onload(): Promise<void> {
 		this.registerEvent(
 			this.app.workspace.on('layout-change', () => {
@@ -44,19 +44,20 @@ export default class MoodSuggestorPlugin extends Plugin {
 		}
 	}
 
-	possiblyLoadGraphMod({ renderer, searchQueries }: DataEngine): (() => void) | null {
-		if (renderer[symSetDataOg]) return null
+	possiblyLoadGraphMod(de: DataEngine): (() => void) | null {
+		const r = de.renderer
+		if (r[symSetDataOg]) return null
 
-		renderer[symSetDataOg] = renderer.setData
-		renderer.setData = function (d, ...args) {
-			d.nodes = customSetData(d, searchQueries)
-			renderer[symSetDataOg]!(d, ...args)
+		r[symSetDataOg] = r.setData
+		r.setData = function (d, ...args) {
+			d.nodes = customSetData(d, de.searchQueries)
+			r[symSetDataOg]!(d, ...args)
 		}
 
 		return () => {
-			if (!renderer?.[symSetDataOg]) return
-			renderer.setData = renderer[symSetDataOg]
-			delete renderer[symSetDataOg]
+			if (!r?.[symSetDataOg]) return
+			r.setData = r[symSetDataOg]
+			delete r[symSetDataOg]
 		}
 	}
 }
