@@ -1,0 +1,10 @@
+{
+  "id": "graph-child-colors",
+  "name": "Graph Child Colors",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Set the colors of child nodes in Graph View to the color of the most common parent",
+  "author": "Lucy Dryaeva",
+  "authorUrl": "https://lucydryaeva.com",
+  "isDesktopOnly": false
+}
